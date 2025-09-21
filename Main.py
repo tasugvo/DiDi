@@ -4,7 +4,7 @@ class Main:
     
     def run():
         
-        caminho_arquivo = "/Users/gustavoferreira/Documents/gustavo/data/projects/codes/vscode/DIDI MOCÓ/maze/maze.txt"
+        caminho_arquivo = "/Users/gustavoferreira/Documents/gustavo/data/projects/codes/vscode/DIDI MOCÓ/mazes/maze.txt"
         labirinto = Ambiente.ler_ambiente(caminho_arquivo)
 
         print("\nPrintando Ambiente:\n")
