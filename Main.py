@@ -1,36 +1,61 @@
-from entities import Ambiente   # módulo Ambiente.py
-from entities.Agente import Agente  # importa a classe Agente dentro de Agente.py
+import os
+import time
+from entities.Ambiente import Ambiente
+from entities.Agente import Agente
 
 class Main:
-    
-    # @staticmethod
     def run():
         caminho_arquivo = "/Users/gustavoferreira/Documents/gustavo/data/projects/codes/vscode/DIDI_MOCO/mazes/maze.txt"
         labirinto = Ambiente.ler_ambiente(caminho_arquivo)
 
-        print("\nPrintando Ambiente:\n")
-        Ambiente.printar_ambiente(labirinto)
-
-        # ===== TESTE DO AGENTE =====
-        print("\nTestando sensor do agente:\n")
-
-        # cria "instância" de Ambiente (simples) com a matriz lida
+        # cria "wrapper" para consistência com o agente
         class TempAmbiente:
             def __init__(self, mapa):
                 self.mapa = mapa
 
         ambiente = TempAmbiente(labirinto)
 
-        # cria agente
-        agente = Agente(posicao=(1, 3), caminho=[], score=0, direcao='L')
+        # posição inicial e saída usando métodos do Ambiente
+        pos_inicio = Ambiente.getEntrada(ambiente.mapa)
+        pos_saida = Ambiente.getSaida(ambiente.mapa)
 
-        # chama o sensor
-        visao = agente.getSensor(ambiente)
+        if not pos_inicio or not pos_saida:
+            print("Erro: labirinto deve ter entrada 'E' e saída 'S'")
+            return
 
-        # printa a visão 3x3
-        for linha in visao:
-            print(linha)
+        # cria agente na posição de entrada
+        agente = Agente(posicao=pos_inicio, historico=[], score=0, direcao='L')
 
+        # loop de execução
+        while True:
+            # limpa a tela antes de imprimir
+            os.system('clear')  # use 'cls' no Windows
+
+            print("\n--- Estado Atual ---\n")
+            Ambiente.printar_agenteIn_ambiente(ambiente.mapa, agente)
+
+            # espera 1 segundo
+            time.sleep(1)
+
+            # conta comida restante
+            comida_restante = any('o' in linha for linha in ambiente.mapa)
+
+            # verifica se o agente chegou na saída e não há mais comida
+            y, x = agente._posicao
+            if (y, x) == pos_saida and not comida_restante:
+                print("\n FIM | O agente encontrou a saída")
+                print(f"Score final: {agente._score}")
+                break
+
+            # move agente
+            moved = agente.move(ambiente)
+            if not moved:
+                print("\n FIM | O agente não pode mais se mover")
+                print(f"Score final: {agente._score}")
+                break
+
+            # imprime score atual
+            print(f"\nScore: {agente._score}")
 
 if __name__ == "__main__":
     Main.run()
