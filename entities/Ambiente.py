@@ -12,7 +12,7 @@ class Ambiente:
         copia = [linha[:] for linha in ambiente]
         for i in range(len(copia)):
             for j in range(len(copia[0])):
-                if copia[i][j] == '_':   # Corrigido
+                if copia[i][j] == '_':
                     copia[i][j] = ' '
         for linha in copia:
             print(' '.join(linha))
@@ -20,11 +20,11 @@ class Ambiente:
     @staticmethod
     def printar_agenteIn_ambiente(ambiente, agente):
         copia = [linha[:] for linha in ambiente]
-        y, x = agente._posicao
+        y, x = agente.getPosicao()
         copia[y][x] = '◆'
         for i in range(len(copia)):
             for j in range(len(copia[0])):
-                if copia[i][j] == '_':  # Corrigido
+                if copia[i][j] == '_':
                     copia[i][j] = ' '
         for linha in copia:
             print(' '.join(linha))
